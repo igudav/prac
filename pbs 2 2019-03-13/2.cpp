@@ -4,35 +4,27 @@
 
 namespace numbers {
 
-    constexpr size_t init_cap = 8;
-
     class complex_stack {
 
-        size_t size;
-        size_t capacity;
-        complex *stack
+        size_t sz;
+        complex *stack;
 
     public:
 
-        complex_stack(size_t capacity = init_cap) : capacity{capacity}
+        complex_stack()
         {
-            stack = new complex[capacity];
-            size1 = 0;
+            sz = 0;
+            stack = nullptr;
         }
 
         complex_stack(const complex_stack &other)
         {
-            capacity = other.capacity;
-            stack = new complex[capacity];
-            for (int i = 0; i < other.size1; ++i) {
-                stack[i] = other.stack[i];
-            }
-            size1 = other.size1;
+
         }
 
         size_t size() const
         {
-            return size1;
+            return sz;
         }
 
         complex operator [](size_t index) const
@@ -60,14 +52,13 @@ namespace numbers {
     complex_stack &operator <<(const complex_stack &cs, complex z)
     {
         complex_stack *st = new complex_stack(cs);
-        st->push(std::move(z));
 
         return *st;
     }
 
     complex &operator +(complex_stack &cs)
     {
-        return cs[cs.size1 - 1];
+
     }
 
     complex_stack &operator ~(complex_stack &cs)
