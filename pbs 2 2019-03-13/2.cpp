@@ -1,6 +1,6 @@
 #include "mz02-1.cpp"
+#include <cstdlib>
 #include <new>
-#include <algorithm>
 
 namespace numbers {
 
@@ -17,9 +17,13 @@ namespace numbers {
             stack = nullptr;
         }
 
-        complex_stack(const complex_stack &other)
+        complex_stack(const complex_stack &other, int ext = 0)
         {
-
+            sz = other.sz + ext;
+            stack = new complex[sz];
+            for (size_t i = 0; i < sz; ++i) {
+                stack[i] = i < other.sz ? other.stack[i] : complex();
+            }
         }
 
         size_t size() const
@@ -41,7 +45,9 @@ namespace numbers {
 
         friend complex &operator +(complex_stack &cs);
 
-        friend complex_stack &operator ~(complex_stack &cs);
+        friend complex operator +(const complex_stack &cs);
+
+        friend complex_stack &operator ~(const complex_stack &cs);
 
         ~complex_stack()
         {
@@ -51,19 +57,24 @@ namespace numbers {
 
     complex_stack &operator <<(const complex_stack &cs, complex z)
     {
-        complex_stack *st = new complex_stack(cs);
-
+        auto *st = new complex_stack(cs, 1);
+        new (&st->stack[st->sz - 1]) complex(z);
         return *st;
     }
 
     complex &operator +(complex_stack &cs)
     {
-
+        return cs.stack[cs.sz - 1];
     }
 
-    complex_stack &operator ~(complex_stack &cs)
+    complex operator +(const complex_stack &cs)
     {
-        complex_stack *newcs = new complex_stack(cs);
+        return cs.stack[cs.sz - 1];
+    }
+
+    complex_stack &operator ~(const complex_stack &cs)
+    {
+        auto *newcs = new complex_stack(cs, -1);
 
         return *newcs;
     }

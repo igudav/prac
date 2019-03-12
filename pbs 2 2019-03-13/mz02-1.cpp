@@ -19,10 +19,6 @@ namespace numbers {
             im = atof(str);
         }
 
-        void *operator new[](size_t i) {
-            return nullptr;
-        }
-
         double get_re() const {
             return re;
         }

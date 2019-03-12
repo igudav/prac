@@ -1,28 +1,20 @@
-#include "pbs 4 2019-04-01/3.cpp"
+#include "pbs 2 2019-03-13/2.cpp"
 #include <iostream>
 #include <vector>
 #include <list>
+#include <set>
 
 using namespace std;
-
-struct Pos {
-    bool operator()(int a)
-    {
-        return a > 0;
-    }
-};
-
-struct Neg {
-    int operator()(int a)
-    {
-        return -a;
-    }
-};
+using namespace numbers;
 
 int main()
 {
-    list l = {-30, -20, 1, 2, 3, -10, 0};
-    vector v = myfilter2(l.begin(), l.end(), Pos{});
-    myapply(v.begin(), v.end(), Neg{});
-    return 0;
+    complex_stack cs{};
+    complex_stack cs1 = cs << complex{1, 0};
+    complex_stack cs2 = cs1 << complex{3, 2};
+    complex_stack cs3 = ~cs2;
+    cs2[1] = complex(0, 5);
+    char buf[100];
+    (+cs2).to_string(buf, sizeof(buf));
+    cout << string(buf) << endl;
 }
