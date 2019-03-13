@@ -1,29 +1,64 @@
 #include "mz02-1.cpp"
 #include <cstdlib>
-#include <new>
 
 namespace numbers {
-
     class complex_stack {
 
+        enum {
+            INIT_CAP = 8,
+            EXT = 2
+        };
+
         size_t sz;
+        size_t cap;
         complex *stack;
+
+        void extend()
+        {
+            cap *= EXT;
+            auto *newst = new complex[cap];
+            for (size_t i = 0; i < sz; ++i) {
+                newst[i] = stack[i];
+            }
+            delete[] stack;
+            stack = newst;
+        }
+
+        void append(const complex &z)
+        {
+            if (sz >= cap) {
+                extend();
+            }
+            stack[sz++] = z;
+        }
 
     public:
 
-        complex_stack()
+        complex_stack() : sz{0}, cap{INIT_CAP}
         {
-            sz = 0;
-            stack = nullptr;
+            stack = new complex[cap];
         }
 
-        complex_stack(const complex_stack &other, int ext = 0)
+        complex_stack(const complex_stack &other) : sz{other.sz}, cap{other.cap}
         {
-            sz = other.sz + ext;
-            stack = new complex[sz];
+            stack = new complex[cap];
             for (size_t i = 0; i < sz; ++i) {
-                stack[i] = i < other.sz ? other.stack[i] : complex();
+                stack[i] = other.stack[i];
             }
+        }
+
+        complex_stack operator=(const complex_stack &other)
+        {
+            if (this != &other) {
+                sz = other.sz;
+                cap = other.cap;
+                delete[] stack;
+                stack = new complex[cap];
+                for (size_t i = 0; i < sz; ++i) {
+                    stack[i] = other.stack[i];
+                }
+            }
+            return *this;
         }
 
         size_t size() const
@@ -31,51 +66,33 @@ namespace numbers {
             return sz;
         }
 
-        complex operator [](size_t index) const
+        complex &operator[](size_t index) const
         {
             return stack[index];
         }
 
-        complex &operator [](size_t index)
+        complex_stack operator<<(const complex &z) const
         {
-            return stack[index];
+            auto newcs = complex_stack(*this);
+            newcs.append(z);
+            return newcs;
         }
 
-        friend complex_stack &operator <<(const complex_stack &cs, complex z);
+        complex &operator+() const
+        {
+            return stack[sz - 1];
+        }
 
-        friend complex &operator +(complex_stack &cs);
-
-        friend complex operator +(const complex_stack &cs);
-
-        friend complex_stack &operator ~(const complex_stack &cs);
+        complex_stack operator~() const
+        {
+            auto newcs = complex_stack(*this);
+            --newcs.sz;
+            return newcs;
+        }
 
         ~complex_stack()
         {
             delete[] stack;
         }
     };
-
-    complex_stack &operator <<(const complex_stack &cs, complex z)
-    {
-        auto *st = new complex_stack(cs, 1);
-        new (&st->stack[st->sz - 1]) complex(z);
-        return *st;
-    }
-
-    complex &operator +(complex_stack &cs)
-    {
-        return cs.stack[cs.sz - 1];
-    }
-
-    complex operator +(const complex_stack &cs)
-    {
-        return cs.stack[cs.sz - 1];
-    }
-
-    complex_stack &operator ~(const complex_stack &cs)
-    {
-        auto *newcs = new complex_stack(cs, -1);
-
-        return *newcs;
-    }
 }
