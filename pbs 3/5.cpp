@@ -107,12 +107,7 @@ bool operator ==(const Account &a, const Account &b)
 
 bool operator !=(const Account &a, const Account &b)
 {
-    for (size_t i = 0; i < Account::DATA_SIZE; ++i) {
-        if (a.data[i] == b.data[i]) {
-            return false;
-        }
-    }
-    return true;
+    return !(a == b);
 }
 
 bool operator >=(const Account &a, const Account &b)
@@ -137,28 +132,12 @@ bool operator <=(const Account &a, const Account &b)
 
 bool operator >(const Account &a, const Account &b)
 {
-    for (size_t i = 0; i < Account::DATA_SIZE; ++i) {
-        if (a.data[Account::DATA_SIZE - i - 1] < b.data[Account::DATA_SIZE - i - 1]) {
-            return false;
-        }
-        if (a.data[Account::DATA_SIZE - i - 1] > b.data[Account::DATA_SIZE - i - 1]) {
-            return true;
-        }
-    }
-    return false;
+    return !(a <= b);
 }
 
 bool operator <(const Account &a, const Account &b)
 {
-    for (size_t i = 0; i < Account::DATA_SIZE; ++i) {
-        if (a.data[Account::DATA_SIZE - i - 1] > b.data[Account::DATA_SIZE - i - 1]) {
-            return false;
-        }
-        if (a.data[Account::DATA_SIZE - i - 1] < b.data[Account::DATA_SIZE - i - 1]) {
-            return true;
-        }
-    }
-    return false;
+    return !(a >= b);
 }
 
 namespace std {

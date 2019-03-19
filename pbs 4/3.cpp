@@ -1,4 +1,3 @@
-/*
 #include <vector>
 
 template <class T, class F>
@@ -44,4 +43,4 @@ auto &myfilter2(T *beg, T *end, F f)
     }
 
     return *v;
-}*/
+}
