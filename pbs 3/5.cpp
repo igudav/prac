@@ -4,11 +4,14 @@
 #include <iomanip>
 
 class Account {
+public:
     constexpr static size_t DATA_SIZE = 4;
     constexpr static size_t SYMBOLS = 8;
+private:
     uint32_t data[DATA_SIZE];
 
 public:
+
 
     Account()
     {
@@ -151,7 +154,11 @@ namespace std {
     struct hash<Account> {
         size_t operator()(const Account &acc) const
         {
-            return hash<std::string>()(acc.to_string());
+            size_t res = 0;
+            for (size_t i = 0; i < Account::DATA_SIZE; ++i) {
+                res ^= hash<uint32_t>()(acc.cdata()[i]);
+            }
+            return res;
         }
     };
 }
