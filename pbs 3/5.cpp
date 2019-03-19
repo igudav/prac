@@ -113,6 +113,9 @@ bool operator !=(const Account &a, const Account &b)
 bool operator >=(const Account &a, const Account &b)
 {
     for (size_t i = 0; i < Account::DATA_SIZE; ++i) {
+        if (a.data[Account::DATA_SIZE - i - 1] > b.data[Account::DATA_SIZE - i - 1]) {
+            return true;
+        }
         if (a.data[Account::DATA_SIZE - i - 1] < b.data[Account::DATA_SIZE - i - 1]) {
             return false;
         }
@@ -123,6 +126,9 @@ bool operator >=(const Account &a, const Account &b)
 bool operator <=(const Account &a, const Account &b)
 {
     for (size_t i = 0; i < Account::DATA_SIZE; ++i) {
+        if (a.data[Account::DATA_SIZE - i - 1] < b.data[Account::DATA_SIZE - i - 1]) {
+            return true;
+        }
         if (a.data[Account::DATA_SIZE - i - 1] > b.data[Account::DATA_SIZE - i - 1]) {
             return false;
         }
