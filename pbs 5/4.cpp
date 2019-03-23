@@ -5,9 +5,9 @@
 #include <sstream>
 
 class Rectangle : public Figure {
-    double a, b;
+    double a{0.0}, b{0.0};
 public:
-    static Rectangle *make(const std::string params)
+    static Rectangle *make(const std::string &params)
     {
         auto *rect = new Rectangle();
         std::sscanf(params.c_str(), "%lf%lf", &rect->a, &rect->b);
@@ -19,7 +19,7 @@ public:
         return a * b;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         std::string s;
         std::ostringstream oss(s);
@@ -43,7 +43,7 @@ public:
         return a * a;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         std::string s;
         std::ostringstream oss(s);
@@ -67,7 +67,7 @@ public:
         return M_PI * radius * radius;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         std::string s;
         std::ostringstream oss(s);

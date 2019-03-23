@@ -1,46 +1,44 @@
 #include <vector>
+#include <functional>
 
 template <class T, class F>
 void myapply(T beg, T end, F f)
 {
-    while (beg != end) {
+    for (; beg != end; ++beg) {
         f(*beg);
-        ++beg;
     }
 }
 
 template <class T, class F>
 void myapply(T *beg, T *end, F f)
 {
-    while (beg != end) {
-        f(beg);
-        ++beg;
+    for (; beg != end; ++beg) {
+        f(*beg);
     }
 }
 
 template <class T, class F>
-auto &myfilter2(T beg, T end, F f)
+auto myfilter2(T beg, T end, F f)
 {
-    auto *v = new std::vector<std::reference_wrapper<typename T::value_type>>();
-    while (beg != end) {
+    auto v = std::vector<std::reference_wrapper<typename T::value_type>>();
+    for (; beg != end; ++beg) {
         if (f(*beg)) {
-            v->insert(v->end(), *beg);
+            v.insert(v.end(), std::reference_wrapper<typename T::value_type>(*beg));
         }
-        ++beg;
     }
 
-    return *v;
+    return v;
 }
 
 template <class T, class F>
-auto &myfilter2(T *beg, T *end, F f)
+auto myfilter2(T *beg, T *end, F f)
 {
-    auto *v = new std::vector<std::reference_wrapper<T>>();
-    while (beg != end) {
-        if (f(beg)) {
-            v->insert(v->end(), beg);
+    auto v = std::vector<std::reference_wrapper<T>>();
+    for (; beg != end; ++beg) {
+        if (f(*beg)) {
+            v.insert(v.end(), std::reference_wrapper<T>(*beg));
         }
     }
 
-    return *v;
+    return v;
 }

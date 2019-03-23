@@ -4,17 +4,19 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <memory>
 
 using namespace std;
 
-struct Creator {
-    static Creator &factory_instance()
+struct Factory {
+
+    static Factory &factory_instance()
     {
-        static Creator cr;
-        return cr;
+        static Factory fctr;
+        return fctr;
     }
 
-    Figure *create(const string &s) const
+    unique_ptr<Figure> create(const string &s) const
     {
         istringstream iss(s);
         string type, par1, par2;
@@ -22,17 +24,22 @@ struct Creator {
         iss >> par1;
         if (type[0] == 'R') {
             iss >> par2;
-            return Rectangle::make(par1 + " " + par2);
+            return unique_ptr<Figure>(Rectangle::make(par1 + " " + par2));
         } else if (type[0] == 'C') {
-            return Circle::make(par1);
+            return unique_ptr<Figure>(Circle::make(par1));
         } else {
-            return Square::make(par1);
+            return unique_ptr<Figure>(Square::make(par1));
         }
     }
+
+private:
+
+    Factory() = default;
+
 };
 
 struct Cmp {
-    bool operator()(const Figure *f1, const Figure *f2)
+    bool operator()(const unique_ptr<Figure> &f1, const unique_ptr<Figure> &f2)
     {
         return f1->get_square() < f2->get_square();
     }
@@ -40,21 +47,28 @@ struct Cmp {
 
 int main()
 {
-    std::ifstream in("in");
+    std::ifstream in("in.txt");
     std::cin.rdbuf(in.rdbuf());
+    /*
+     *
+     * УБРАТЬ ЭТО НАФИГ !!!!!11
+     *
+     * И ИНКЛЮД 4.CPP ТОЖЕ!!!!!11
+     *
+     *
+     */
 
     string s;
-    vector<Figure *> v;
-    Creator cr = Creator::factory_instance();
+    vector<unique_ptr<Figure>> v;
+    Factory fctr{Factory::factory_instance()};
 
     while(getline(cin, s)) {
-        v.push_back(cr.create(s));
+        v.push_back(fctr.create(s));
     }
 
     stable_sort(v.begin(), v.end(), Cmp());
 
-    for (auto iter : v) {
+    for (const auto &iter : v) {
         cout << iter->to_string();
-        delete iter;
     }
 }
