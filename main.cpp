@@ -11,5 +11,9 @@ using namespace std;
 
 int main()
 {
-
+    String a = "aaa";
+    String b = a;
+    a.~String();
+    cout << string(b) << endl;
+    return 0;
 }

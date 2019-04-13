@@ -1,21 +1,21 @@
 #include <iostream>
 #include <string>
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 using namespace std;
+using namespace boost::gregorian;
 
 int main()
 {
-    string s;
-    cin >> s;
-    if (s == "1985-10-26") {
-        for (int i = 0; i < 4; ++i) {
-            cin >> s;
-        }
-        cout << "32848" << endl;
-    } else {
-        for (int i = 0; i < 2; ++i) {
-            cin >> s;
-        }
-        cout << 730;
+    string cur, prev;
+    cin >> prev;
+    date dp = from_string(prev);
+    long long res = 0;
+    while (cin >> cur) {
+        date dc = from_string(cur);
+        date_duration dd = dc - dp;
+        res += abs(dd.days());
+        prev = cur;
     }
+    cout << res << endl;
 }
