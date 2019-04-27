@@ -1,41 +1,167 @@
-#include <string>
-#include <vector>
 #include <iostream>
-#include <algorithm>
-#include <cstring>
 #include <cctype>
 
 using namespace std;
 
-struct Cmp {
-    string s;
-
-    bool operator()(int a, int b) {
-        return strcmp(s.c_str() + a, s.c_str() + b) < 0;
-    }
-
-};
-
 int main()
 {
-    Cmp c;
-    getline(cin, c.s);
+    enum State {
+        H,
+        A,
+        AB,
+        AC,
+        ABC,
+        AS,
+        ABS,
+        ACS,
+        ABCS,
+        ERR
+    };
 
-    while (isspace(c.s[c.s.size() - 1])) {
-        c.s.erase(c.s.size() - 1, 1);
+    int c;
+    State st = H;
+
+    while ((c = cin.get()) >= 0) {
+        switch (st) {
+            case H:
+            if (c == '0') {
+                st = A;
+            } else if (c == '1') {
+                st = AB;
+            } else if (isspace(c)) {
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case A:
+            if (c == '0') {
+                st = A;
+            } else if (c == '1') {
+                st = AB;
+            } else if (isspace(c)) {
+                cout << '0' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case AS:
+            if (c == '0') {
+                st = A;
+            } else if (c == '1') {
+                st = AB;
+            } else if (isspace(c)) {
+                cout << '1' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case AB:
+            if (c == '0') {
+                st = AC;
+            } else if (c == '1') {
+                st = ABC;
+            } else if (isspace(c)) {
+                cout << '0' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case ABS:
+            if (c == '0') {
+                st = AC;
+            } else if (c == '1') {
+                st = ABC;
+            } else if (isspace(c)) {
+                cout << '1' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case AC:
+            if (c == '0') {
+                st = AS;
+            } else if (c == '1') {
+                st = ABS;
+            } else if (isspace(c)) {
+                cout << '0' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case ACS:
+            if (c == '0') {
+                st = AS;
+            } else if (c == '1') {
+                st = ABS;
+            } else if (isspace(c)) {
+                cout << '1' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case ABC:
+            if (c == '0') {
+                st = ACS;
+            } else if (c == '1') {
+                st = ABCS;
+            } else if (isspace(c)) {
+                cout << '0' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case ABCS:
+            if (c == '0') {
+                st = ACS;
+            } else if (c == '1') {
+                st = ABCS;
+            } else if (isspace(c)) {
+                cout << '1' << endl;
+                st = H;
+            } else {
+                cout << '0' << endl;
+                st = ERR;
+            }
+            break;
+            case ERR:
+            if (isspace(c)) {
+                st = H;
+            }
+            break;
+        }
+    }
+    switch (st) {
+        case ERR:
+        case H:
+        break;
+        case AS:
+        case ABS:
+        case ACS:
+        case ABCS:
+        cout << '1' << endl;
+        break;
+        case A:
+        case AB:
+        case AC:
+        case ABC:
+        cout << '0' << endl;
+        break;
     }
 
-    vector<int> v;
-    v.reserve(c.s.size());
-
-    for (int i = 0; i < (int) c.s.size(); ++i) {
-        v.push_back(i);
-    }
-
-    sort(v.begin(), v.end(), c);
-
-    for (auto &it : v) {
-        cout << it << endl;
-    }
-
+    return 0;
 }

@@ -10,23 +10,63 @@
 
 using namespace std;
 
+struct A {
+    int a;
+    A (int n) : a(n) {}
+    virtual void f() { cout << "f()_A\n"; }
+    virtual int g() = 0;
+};
+
+struct T {
+    int a, b;
+    T (int x = 0, int y = 0) {
+        a = x;
+        b = y;
+    }
+};
+
+struct B : public A {
+    B() : A(5) {}
+    void f() { cout << "f()_B\n"; }
+    int g() { return 0; }
+};
+
+struct P {
+    T *ptr;
+    bool flag = false;
+    P(T *pt)
+    {
+        if (pt) {
+            ptr = pt;
+        } else {
+            ptr = new T();
+            flag = true;
+        }
+    }
+    T *operator->()
+    {
+        return ptr;
+    }
+    ~P()
+    {
+        if (flag) {
+            delete ptr;
+        }
+    }
+};
+
 int main()
 {
 
-    cout << "100" << endl;
-    cout << "1 26 1" << endl;
-    for (int y = 2; y <= 25; ++y) {
-        cout << "1 " << y << " 4" << endl;
-    }
-    for (int x = 1; x <= 25; ++x) {
-        cout << x << " 1 2" << endl;
-    }
-    for (int y = 1; y <= 25; ++y) {
-        cout << "26 " << y << " 3" << endl;
-    }
-    for (int x = 1; x <= 26; ++x) {
-        cout << x << " 26 1" << endl;
-    }
-
+    B b;
+    A *pa = &b;
+    pa->f();
+    cout << pa->a << endl;
+    T t;
+    P p(&t);
+    p->a = p->b = 3;
+    cout << t.a << ' ' << t.b << endl;
+    P p1(NULL);
+    cout << p1->a << ' ' << p1->b << endl;
     return 0;
 }
