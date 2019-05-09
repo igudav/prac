@@ -1,30 +1,27 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
+#include "pbs 12/7.cpp"
+#include <functional>
+#include <fstream>
 
-using namespace std;
+int incr(int a)
+{
+    return a + 1;
+}
 
-struct Rule {
-    string cur_state;
-    char c;
-    string new_state;
-
-    Rule(const string &curState, char c, const string &newState) : cur_state(curState), c(c),
-                                                                   new_state(newState) {}
-};
-
-int main() {
-    unordered_multimap<string, Rule> umm;
-
-    umm.insert(make_pair("A", Rule("A", 'a', "A")));
-    umm.insert(make_pair("A", Rule("A", 'b', "B")));
-    umm.insert(make_pair("B", Rule("B", 'a', "A")));
-
-    auto [from, to] = umm.equal_range("A");
-
-    for (; from != to; ++from) {
-        cout << from->first << '\t' << from->second.c << endl;
+void print(const std::vector<int> &outs)
+{
+    for (auto v : outs) {
+        std::cout << v << std::endl;
     }
+}
 
-    return 0;
+int main()
+{
+    using namespace std::literals::chrono_literals;
+
+    std::vector<int> ins{1, 2, 3, 4, 5};
+    async_vector<int, int>(ins, std::function(incr), std::function(print));
+    std::this_thread::sleep_for(500ms);
 }
